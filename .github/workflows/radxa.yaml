@@ -64,7 +64,6 @@ jobs:
         env:
           FIRST_USER_NAME: ${{ secrets.DUSER }}
           FIRST_USER_PASS: ${{ secrets.DPASSWORD }}
-          daimg: ${{ github.event.inputs.image }}
         run: |
           cd images
           sudo sha256sum base.img.xz > base.sha256
@@ -75,25 +74,20 @@ jobs:
           echo "apt-get upgrade -y" >> setup.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
           sudo packer build radxa.json
-          sudo mv out.img $daimg.img
+          sudo mv out.img ${{ github.event.inputs.image }}.img
       - name: Compress
         env:
-          daimg: ${{ github.event.inputs.image }}
         run: |
           cd images
-          sudo xz --compress --fast $daimg.img
-          sudo sha256sum $daimg.img.xz > $daimg.sha256
+          sudo xz --compress --fast ${{ github.event.inputs.image }}.img
+          sudo sha256sum ${{ github.event.inputs.image }}.img.xz > ${{ github.event.inputs.image }}.sha256
       - name: Upload Updated
-        env:
-          daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.env.daimg }}
-          path: images/${{ github.env.daimg }}.img.xz
+          name: ${{ github.event.inputs.image }}
+          path: images/${{ github.event.inputs.image }}.img.xz
       - name: Upload SHA256
-        env:
-          daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.env.daimg }}-sha256
-          path: images/${{ github.env.daimg }}.sha256
+          name: ${{ github.event.inputs.image }}-sha256
+          path: images/${{ github.event.inputs.image }}.sha256
