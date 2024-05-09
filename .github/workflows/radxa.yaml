@@ -46,6 +46,9 @@ jobs:
           flavor: cli
       - name: Build Packer Arm Plugin
         run: |
+          ls
+          pwd 
+          ls *
           cd packer-builder-arm
           go mod download -x
           go build packer-builder-arm
