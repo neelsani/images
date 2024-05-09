@@ -53,16 +53,6 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": [
-        "echo nameserver 8.8.8.8 > /etc/resolv.conf",
-        "useradd -p $(openssl passwd -1 {{user `dpass`}}) -m {{user `duser`}}",
-        "apt-get update -y",
-        "apt-get upgrade -y",
-        "apt-get install {{user `packages_spaces`}} -y"
-      ]
-    },
-    {
-      "type": "shell",
       "script": "setup.sh"
     }
   ]
