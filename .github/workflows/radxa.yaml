@@ -69,6 +69,11 @@ jobs:
           cd images
           sudo sha256sum base.img.xz > base.sha256
           PACKAGES_WITH_SPACES=$(echo "${{ github.event.inputs.packages }}" | tr ',' ' ')
+          echo "echo nameserver 8.8.8.8 > /etc/resolv.conf" >> setup.sh
+          echo "useradd -p $(openssl passwd -1 $FIRST_USER_PASS) -m $FIRST_USER_NAME" >> setup.sh
+          echo "apt-get update -y" >> setup.sh
+          echo "apt-get upgrade -y" >> setup.sh
+          echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
           sudo packer build radxa.json
       - name: Compress
         env:

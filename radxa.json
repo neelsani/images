@@ -60,6 +60,10 @@
         "apt-get upgrade -y",
         "apt-get install {{user `packages_spaces`}} -y"
       ]
+    },
+    {
+      "type": "shell",
+      "script": "setup.sh"
     }
   ]
 }
