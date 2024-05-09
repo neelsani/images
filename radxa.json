@@ -1,5 +1,10 @@
 {
-  "variables": {},
+  "variables": {
+    "imagename": "{{env `daimg`}}",
+    "dpass": "{{env `FIRST_USER_PASS`}}",
+    "duser": "{{env `FIRST_USER_NAME`}}",
+    "packages_spaces": "{{env `PACKAGES_WITH_SPACES`}}"
+  },
   "builders": [
     {
       "type": "arm",
@@ -9,7 +14,7 @@
       "file_target_extension": "xz",
       "file_unarchive_cmd": ["xz", "--decompress", "$ARCHIVE_PATH"],
       "image_build_method": "reuse",
-      "image_path": "{{env `daimg`}}.img",
+      "image_path": "{{user `imagename`}}.img",
       "image_size": "5G",
 
       "image_partitions": [
@@ -50,10 +55,10 @@
       "type": "shell",
       "inline": [
         "echo nameserver 8.8.8.8 > /etc/resolv.conf",
-        "useradd -p $(openssl passwd -1 {{env `FIRST_USER_PASS`}}) -m {{env `FIRST_USER_NAME`}}",
+        "useradd -p $(openssl passwd -1 {{user `dpass`}}) -m {{user `duser`}}",
         "apt-get update -y",
         "apt-get upgrade -y",
-        "apt-get install {{env `PACKAGES_WITH_SPACES`}} -y"
+        "apt-get install {{user `packages_spaces`}} -y"
       ]
     }
   ]
