@@ -11,11 +11,9 @@ on:
           - "raspbian-bullseye-arm64"
           - "raspbian-bookworm-armv6l"
           - "raspbian-bookworm-arm64"
-      packages: 
+      packages:
         default: ""
         required: true
-      
-
 
 jobs:
   build:
@@ -44,7 +42,7 @@ jobs:
           repository: RPi-Distro/pi-gen
           ref: ${{ steps.set_branch.outputs.branch }}
       - name: Install Deps
-        run:  sudo apt install coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc gpg pigz xxd zip gzip tar -y
+        run: sudo apt install coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc gpg pigz xxd zip gzip tar -y
       - name: Add Packages to Image
         run: |
           cp -R stage2 stage2-base
@@ -65,10 +63,12 @@ jobs:
           echo FIRST_USER_NAME=\'$FIRST_USER_NAME\' >> config
           echo FIRST_USER_PASS=\'$FIRST_USER_PASS\' >> config
 
+      - name: Build
+        run: |
           sudo ./build-docker.sh
-
       - name: Rename
         run: |
+          cd deploy
           for file in *.img.xz; do sudo mv "$file" ${{ github.event.inputs.image }}.img.xz && break; done
           sha256sum ${{ github.event.inputs.image }}.img.xz > ${{ github.event.inputs.image }}.sha256
       - name: Upload Stock Image

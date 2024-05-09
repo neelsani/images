@@ -1,0 +1,60 @@
+name: Builds Raspbian
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: base image type
+        required: true
+        type: choice
+        options:
+          - "radxa-zero-debian-bullseye-arm64"
+      packages:
+        default: ""
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FIRST_USER_NAME: ${{ secrets.DUSER }}
+      FIRST_USER_PASS: ${{ secrets.DPASSWORD }}
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.18"
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "latest"
+      - name: Get Packer Stuff
+        uses: actions/checkout@v4
+        with:
+          repository: mkaczanowski/packer-builder-arm
+          path: packer-builder-arm
+
+      - name: Install Dependencies
+        run: sudo apt install coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc gpg pigz xxd zip gzip tar -y
+
+      - name: Build Radxa
+        uses: radxa-repo/rbuild@main
+        with:
+          board: radxa-zero
+          suite: bullseye
+          flavor: cli
+      - name: Build Packer Arm Plugin
+        run: |
+          cd packer-builder-arm
+          go mod download -x
+          go build packer-builder-arm
+          sudo chmod +x packer-builder-arm
+
+      - name: Package
+        run: |
+          ls
+          cd rbuild
+          ls
+          cd .output
+          ls
