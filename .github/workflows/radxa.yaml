@@ -76,7 +76,6 @@ jobs:
           sudo packer build radxa.json
           sudo mv out.img ${{ github.event.inputs.image }}.img
       - name: Compress
-        env:
         run: |
           cd images
           sudo xz --compress --fast ${{ github.event.inputs.image }}.img
