@@ -75,7 +75,7 @@ jobs:
           echo "apt-get upgrade -y" >> setup.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
           sudo packer build radxa.json
-          sudo mv *.img $daimg.img
+          sudo mv out.img $daimg.img
       - name: Compress
         env:
           daimg: ${{ github.event.inputs.image }}

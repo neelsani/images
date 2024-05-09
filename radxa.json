@@ -1,6 +1,5 @@
 {
   "variables": {
-    "imagename": "{{env `daimg`}}",
     "dpass": "{{env `FIRST_USER_PASS`}}",
     "duser": "{{env `FIRST_USER_NAME`}}",
     "packages_spaces": "{{env `PACKAGES_WITH_SPACES`}}"
@@ -14,7 +13,7 @@
       "file_target_extension": "xz",
       "file_unarchive_cmd": ["xz", "--decompress", "$ARCHIVE_PATH"],
       "image_build_method": "reuse",
-      "image_path": "{{user `imagename`}}.img",
+      "image_path": "out.img",
       "image_size": "5G",
 
       "image_partitions": [
