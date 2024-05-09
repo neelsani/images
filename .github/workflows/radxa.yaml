@@ -1,4 +1,4 @@
-name: Builds Raspbian
+name: Builds radxa-zero
 on:
   workflow_dispatch:
     inputs:
