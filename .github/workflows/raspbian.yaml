@@ -69,19 +69,18 @@ jobs:
       - name: Rename
         run: |
           cd deploy
-          ls
-          for file in *.img.xz; do sudo mv "$file" ${{ github.event.inputs.image }}.img.xz && break; done
-          ls
+          for file in *.img.xz; do sudo mv "$file" ../${{ github.event.inputs.image }}.img.xz && break; done
+          cd ..
           sudo sha256sum ${{ github.event.inputs.image }}.img.xz > ${{ github.event.inputs.image }}.sha256
       - name: Upload Stock Image
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.inputs.image }}.img.xz
-          path: deploy/${{ github.event.inputs.image }}.img.xz
+          path: ${{ github.event.inputs.image }}.img.xz
           compression-level: 0
       - name: Upload SHA-256
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.inputs.image }}.sha256
-          path: deploy/${{ github.event.inputs.image }}.sha256
+          path: ${{ github.event.inputs.image }}.sha256
           compression-level: 0
