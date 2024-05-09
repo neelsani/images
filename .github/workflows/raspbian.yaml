@@ -70,7 +70,7 @@ jobs:
         run: |
           cd deploy
           for file in *.img.xz; do sudo mv "$file" ${{ github.event.inputs.image }}.img.xz && break; done
-          sha256sum ${{ github.event.inputs.image }}.img.xz > ${{ github.event.inputs.image }}.sha256
+          sudo sha256sum ${{ github.event.inputs.image }}.img.xz > ${{ github.event.inputs.image }}.sha256
       - name: Upload Stock Image
         uses: actions/upload-artifact@v4
         with:
