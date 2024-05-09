@@ -56,7 +56,7 @@ jobs:
         run: |
           cd rbuild
           chmod +x rbuild
-          sudo ./rbuild --compress radxa-zero bullseye cli 
+          ./rbuild --compress radxa-zero bullseye cli 
           sudo mv *.img.xz base.img.xz
           sudo mv base.img.xz ../images/.
       - name: Add Packages
