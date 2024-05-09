@@ -18,11 +18,16 @@ jobs:
     env:
       FIRST_USER_NAME: ${{ secrets.DUSER }}
       FIRST_USER_PASS: ${{ secrets.DPASSWORD }}
+      daimg: ${{ github.event.inputs.image }}
     steps:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.18"
+      - name: Get Images Repo
+        uses: actions/checkout@v4
+        with:
+          path: images
 
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
@@ -37,27 +42,44 @@ jobs:
 
       - name: Install Dependencies
         run: sudo apt install coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc gpg pigz xxd zip gzip tar -y
-
-      - name: Build Radxa
-        uses: radxa-repo/rbuild@main
-        with:
-          board: radxa-zero
-          suite: bullseye
-          flavor: cli
       - name: Build Packer Arm Plugin
         run: |
-          ls
-          pwd 
-          ls *
           cd packer-builder-arm
           go mod download -x
           go build packer-builder-arm
           sudo chmod +x packer-builder-arm
+          sudo mv packer-builder-arm ../images/.
 
-      - name: Package
+      - name: Get Radxa rbuild
+        uses: actions/checkout@v4
+        with:
+          repository: radxa-repo/rbuild
+          path: rbuild
+      - name: Build Base Image
         run: |
-          ls
           cd rbuild
-          ls
-          cd .output
-          ls
+          chmod +x rbuild
+          sudo ./rbuild --compress radxa-zero bullseye cli 
+          sudo mv *.img.xz base.img.xz
+          sudo mv base.img.xz ../images/.
+      - name: Add Packages
+        run: |
+          cd images
+          sudo sha256sum base.img.xz > base.sha256
+          PACKAGES_WITH_SPACES=$(echo "${{ github.event.inputs.packages }}" | tr ',' ' ')
+          sudo packer build radxa.json
+      - name: Compress
+        run: |
+          cd images
+          sudo xz --compress --fast $daimg.img
+          sudo sha256sum $daimg.img.xz > $daimg.sha256
+      - name: Upload Updated
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.env.daimg }}.img.xz
+          path: images/${{ github.env.daimg }}.img.xz
+      - name: Upload SHA256
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.env.daimg }}.sha256
+          path: images/${{ github.env.daimg }}.sha256
