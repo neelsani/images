@@ -43,7 +43,7 @@ jobs:
         run: |
           cd packer-builder-arm
           go mod download -x
-          go build packer-builder-arm
+          go build -x
           sudo chmod +x packer-builder-arm
           sudo mv packer-builder-arm ../images/.
 
