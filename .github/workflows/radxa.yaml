@@ -15,10 +15,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      FIRST_USER_NAME: ${{ secrets.DUSER }}
-      FIRST_USER_PASS: ${{ secrets.DPASSWORD }}
-      daimg: ${{ github.event.inputs.image }}
+
     steps:
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -63,22 +60,32 @@ jobs:
           sudo mv *.img.xz base.img.xz
           sudo mv base.img.xz ../images/.
       - name: Add Packages
+        env:
+          FIRST_USER_NAME: ${{ secrets.DUSER }}
+          FIRST_USER_PASS: ${{ secrets.DPASSWORD }}
+          daimg: ${{ github.event.inputs.image }}
         run: |
           cd images
           sudo sha256sum base.img.xz > base.sha256
           PACKAGES_WITH_SPACES=$(echo "${{ github.event.inputs.packages }}" | tr ',' ' ')
           sudo packer build radxa.json
       - name: Compress
+        env:
+          daimg: ${{ github.event.inputs.image }}
         run: |
           cd images
           sudo xz --compress --fast $daimg.img
           sudo sha256sum $daimg.img.xz > $daimg.sha256
       - name: Upload Updated
+        env:
+          daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.env.daimg }}.img.xz
           path: images/${{ github.env.daimg }}.img.xz
       - name: Upload SHA256
+        env:
+          daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.env.daimg }}.sha256
