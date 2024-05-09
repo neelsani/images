@@ -75,12 +75,12 @@ jobs:
       - name: Upload Stock Image
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.inputs.image }}.img.xz
+          name: ${{ github.event.inputs.image }}
           path: ${{ github.event.inputs.image }}.img.xz
           compression-level: 0
       - name: Upload SHA-256
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.inputs.image }}.sha256
+          name: ${{ github.event.inputs.image }}-sha256
           path: ${{ github.event.inputs.image }}.sha256
           compression-level: 0
