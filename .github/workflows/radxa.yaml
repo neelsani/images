@@ -75,6 +75,7 @@ jobs:
           echo "apt-get upgrade -y" >> setup.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
           sudo packer build radxa.json
+          sudo mv *.img $daimg.img
       - name: Compress
         env:
           daimg: ${{ github.event.inputs.image }}
@@ -87,12 +88,12 @@ jobs:
           daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.env.daimg }}.img.xz
+          name: ${{ github.env.daimg }}
           path: images/${{ github.env.daimg }}.img.xz
       - name: Upload SHA256
         env:
           daimg: ${{ github.event.inputs.image }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.env.daimg }}.sha256
+          name: ${{ github.env.daimg }}-sha256
           path: images/${{ github.env.daimg }}.sha256
