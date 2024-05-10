@@ -1,7 +1,5 @@
 {
   "variables": {
-    "dpass": "{{env `FIRST_USER_PASS`}}",
-    "duser": "{{env `FIRST_USER_NAME`}}",
     "packages_spaces": "{{env `PACKAGES_WITH_SPACES`}}"
   },
   "builders": [
