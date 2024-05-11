@@ -68,7 +68,7 @@ jobs:
           echo "echo adding nameserver" >> setup.sh
           echo "echo nameserver 8.8.8.8 > /etc/resolv.conf" >> setup.sh
           echo "echo adding password" >> setup.sh
-          echo "useradd -p $(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> setup.sh
+          echo "useradd -p \$(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> setup.sh
           echo "updating" >> setup.sh
           echo "apt-get update -y" >> setup.sh
           echo "apt-get upgrade -y" >> setup.sh
