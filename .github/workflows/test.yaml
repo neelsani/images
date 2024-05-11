@@ -15,4 +15,4 @@ jobs:
           echo "apt-get update -y" >> setup.sh
           echo "apt-get upgrade -y" >> setup.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> setup.sh
-          echo setup.sh
+          cat setup.sh
