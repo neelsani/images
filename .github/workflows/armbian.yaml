@@ -39,7 +39,7 @@ jobs:
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> customize-image.sh
       - name: Build
         run: |
-          ./compile.sh BOARD=${{ github.event.inputs.image}} BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_CONFIGURE=no
+          ./compile.sh BOARD=${{ github.event.inputs.image}} BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=xz
       - name: Upload Updated
         uses: actions/upload-artifact@v4
         with:
