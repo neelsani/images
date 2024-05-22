@@ -1,0 +1,38 @@
+name: Builds radxa-zero
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: base image type
+        required: true
+        type: choice
+        options:
+          - "radxa-zero"
+      packages:
+        default: ""
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone Build Tool
+        uses: actions/checkout@v4
+        with:
+          repository: armbian/build
+      - name: Build With Options
+        run: |
+          cd userpatches
+          PACKAGES_WITH_SPACES=$(echo "${{ github.event.inputs.packages }}" | tr ',' ' ')
+          echo "rm /root/.not_logged_in_yet" >> customize-image.sh
+          echo "echo adding nameserver" >> customize-image.sh
+          echo "echo nameserver 8.8.8.8 > /etc/resolv.conf" >> customize-image.sh
+          echo "echo adding password" >> customize-image.sh
+          echo "useradd -p \$(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> customize-image.sh
+          echo "usermod -aG sudo ${{ secrets.DUSER }}" >> customize-image.sh
+          echo "updating" >> customize-image.sh
+          echo "apt-get update -y" >> customize-image.sh
+          echo "apt-get upgrade -y" >> customize-image.sh
+          echo "apt-get install $PACKAGES_WITH_SPACES -y" >> customize-image.sh
+          cat customize-image.sh
