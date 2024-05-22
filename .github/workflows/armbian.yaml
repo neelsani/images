@@ -1,4 +1,4 @@
-name: Builds radxa-zero
+name: Builds Armbian
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: armbian/build
-      - name: Build With Options
+      - name: preconf
         run: |
           mkdir userpatches
           ls
@@ -37,4 +37,11 @@ jobs:
           echo "apt-get update -y" >> customize-image.sh
           echo "apt-get upgrade -y" >> customize-image.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> customize-image.sh
-          cat customize-image.sh
+      - name: Build
+        run: |
+          ./compile.sh BOARD=${{ github.event.inputs.image}} BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_CONFIGURE=no
+      - name: Upload Updated
+        uses: actions/upload-artifact@v4
+        with:
+          name: armbian-stuff
+          path: .
