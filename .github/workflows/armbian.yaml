@@ -32,6 +32,8 @@ jobs:
           echo "echo nameserver 8.8.8.8 > /etc/resolv.conf" >> customize-image.sh
           echo "echo adding password" >> customize-image.sh
           echo "useradd -s /bin/bash -p \$(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> customize-image.sh
+          echo "mkdir /home/${{ secrets.DUSER }}" >> customize-image.sh
+          echo "chown ${{ secrets.DUSER }}:${{ secrets.DUSER }} /home/${{ secrets.DUSER }}"  >> customize-image.sh
           echo "usermod -aG sudo ${{ secrets.DUSER }}" >> customize-image.sh
           echo "echo updating" >> customize-image.sh
           echo "apt-get update -y" >> customize-image.sh
@@ -40,6 +42,9 @@ jobs:
       - name: Build
         run: |
           ./compile.sh BOARD=${{ github.event.inputs.image}} BRANCH=current RELEASE=bullseye BUILD_MINIMAL=yes BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=xz
+          cd output/images
+          sudo mv *.img.xz radxa-zero-debian-bullseye-arm64.img.xz
+          sudo sha256sum radxa-zero-debian-bullseye-arm64.img.xz > radxa-zero-debian-bullseye-arm64.sha256
       - name: Upload Updated
         uses: actions/upload-artifact@v4
         with:
