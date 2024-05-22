@@ -33,7 +33,7 @@ jobs:
           echo "echo adding password" >> customize-image.sh
           echo "useradd -s /bin/bash -p \$(openssl passwd -1 ${{ secrets.DPASSWORD }}) -m ${{ secrets.DUSER }}" >> customize-image.sh
           echo "usermod -aG sudo ${{ secrets.DUSER }}" >> customize-image.sh
-          echo "updating" >> customize-image.sh
+          echo "echo updating" >> customize-image.sh
           echo "apt-get update -y" >> customize-image.sh
           echo "apt-get upgrade -y" >> customize-image.sh
           echo "apt-get install $PACKAGES_WITH_SPACES -y" >> customize-image.sh
