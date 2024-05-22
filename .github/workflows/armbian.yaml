@@ -50,3 +50,17 @@ jobs:
         with:
           name: armbian-stuff
           path: output/images
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: output/images/radxa-zero-debian-bullseye-arm64.img.xz
+          tag: v1.0.0
+          overwrite: true
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: output/images/radxa-zero-debian-bullseye-arm64.sha256
+          tag: v1.0.0
+          overwrite: true
