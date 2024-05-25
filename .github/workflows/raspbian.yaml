@@ -84,3 +84,17 @@ jobs:
           name: ${{ github.event.inputs.image }}-sha256
           path: ${{ github.event.inputs.image }}.sha256
           compression-level: 0
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.event.inputs.image }}.img.xz
+          tag: v1.0.0
+          overwrite: true
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.event.inputs.image }}.sha256
+          tag: v1.0.0
+          overwrite: true
